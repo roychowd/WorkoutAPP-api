@@ -1,31 +1,12 @@
-const express = require("express");
-const app = express();
-const bodyParser = require("body-parser");
+/*
+================= USED FOR USER AUTHENTICATION AND REGISTRATION ======================== 
+*/
+
+const db = require("../config/db/database");
 const bcrypt = require("bcrypt-nodejs");
-const cors = require("cors");
-const knex = require("knex");
-const keys = require("./keys/keys");
 
-const db = knex({
-  client: "pg",
-  connection: {
-    host: "127.0.0.1",
-    user: "postgres",
-    password: "",
-    database: "MarinaFood"
-  }
-});
-
-app.use(bodyParser.json());
-app.use(cors());
-// db.select("*")
-//   .from("Food")
-//   .then(console.log);
-// app.post('/signin', (req, res) => {
-//     db.select
-// })
-
-app.post("/signin", (req, res) => {
+module.exports = app => {
+  app.post("/signin", (req, res) => {
     db.select("email", "hash")
       .from("login")
       .where("email", "=", req.body.email)
@@ -45,9 +26,9 @@ app.post("/signin", (req, res) => {
       })
       .catch(err => res.status(400).json("wrong credentials"));
   });
-  
+
   app.post("/register", (req, res) => {
-    const { email, name, password } = req.body;
+    const { email, name, password, gender } = req.body;
     const hash = bcrypt.hashSync(password);
     db.transaction(trx => {
       trx
@@ -63,7 +44,8 @@ app.post("/signin", (req, res) => {
             .insert({
               email: loginEmail[0],
               name: name,
-              joined: new Date()
+              joined: new Date(),
+              gender: gender
             })
             .then(user => {
               res.json(user[0]);
@@ -73,8 +55,19 @@ app.post("/signin", (req, res) => {
         .catch(trx.rollback);
     }).catch(err => res.status(400).json("unable to register"));
   });
-  
 
-app.listen(3000, () => {
-  console.log("app is running on port 3000");
-});
+  // needed to update the calroic goals of the user inside the db === //
+  app.put("/profile/:id/overall_calories", (req, res) => {
+    const id = req.params.id;
+    const desiredCalories = req.body.calories;
+    console.log(id, desiredCalories);
+    db("users")
+      .where("id", "=", id)
+      .update({
+        caloric_goals: desiredCalories
+      })
+      .returning("caloric_goals")
+      .then(calories => res.json(calories[0]))
+      .catch(err => res.status(400).json("error putting users Caloric Goals"));
+  });
+};

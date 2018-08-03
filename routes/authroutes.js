@@ -60,13 +60,12 @@ module.exports = app => {
   app.put("/profile/:id/overall_calories", (req, res) => {
     const id = req.params.id;
     const desiredCalories = req.body.calories;
-    console.log(id, desiredCalories);
     db("users")
       .where("id", "=", id)
       .update({
         caloric_goals: desiredCalories
       })
-      .returning("caloric_goals")
+      .returning(["daily_calorie", "caloric_goals"])
       .then(calories => res.json(calories[0]))
       .catch(err => res.status(400).json("error putting users Caloric Goals"));
   });

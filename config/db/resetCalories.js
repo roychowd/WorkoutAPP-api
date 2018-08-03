@@ -1,3 +1,5 @@
+// NODE SCEHDULE RULE for reseting the daily calories of each user to 0 every night at midnight"
+
 const cron = require("node-schedule");
 
 const db = require("./database");

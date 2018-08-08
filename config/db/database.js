@@ -1,5 +1,5 @@
 const knex = require("knex");
-const db = knex({
+const knexdb = knex({
   client: "pg",
   connection: {
     host: "127.0.0.1",
@@ -9,6 +9,9 @@ const db = knex({
   }
 });
 
-
+const bookshelf = require("bookshelf");
+const securePassword = require("bookshelf-secure-password");
+const db = bookshelf(knexdb);
+db.plugin(securePassword);
 
 module.exports = db;

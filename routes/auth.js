@@ -23,6 +23,7 @@ router.post("/seedUser", (req, res) => {
 
 // == this is a test route to get the authorization of the user == //
 router.post("/getToken", (req, res) => {
+  console.log(req.body);
   if (!req.body.email || !req.body.password) {
     return res.status(401).send("Error: INVALID credientals");
   }

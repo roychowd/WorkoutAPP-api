@@ -26,6 +26,7 @@ app.use("/auth", auth);
 require("./routes/authroutes")(app);
 require("./routes/userFood")(app);
 
-app.listen(3000, () => {
-  console.log("app is running on port 3000");
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log("app is running on port " + PORT);
 });

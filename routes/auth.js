@@ -9,19 +9,29 @@ router.get("/", (req, res) => {
 });
 
 router.post("/seedUser", (req, res) => {
+  console.log(req.body);
   if (!req.body.email || !req.body.password) {
     return res.status(401).send("Error: INVALID credientals");
   }
-  const user = new User({
-    email: req.body.email,
-    password: req.body.password
-  });
-  user.save().then(() => {
-    res.send("ok");
-  });
+  User.forge({ email: req.body.email })
+    .fetch()
+    .then(result => {
+      if (!result) {
+        const user = new User({
+          email: req.body.email,
+          password: req.body.password
+        });
+        user.save().then(user => {
+          res.send(user);
+        });
+      } else {
+        return res.status(401).send("ERROR");
+      }
+    })
+    .catch(err => res.status(400).send("Errors"));
 });
 
-// == this is a test route to get the authorization of the user == //
+// == this is a test route to get the json web token of the user == //
 router.post("/getToken", (req, res) => {
   console.log(req.body);
   if (!req.body.email || !req.body.password) {
@@ -31,18 +41,19 @@ router.post("/getToken", (req, res) => {
   User.forge({ email: req.body.email })
     .fetch()
     .then(result => {
+      console.log(result);
       if (!result) {
-        res.status(400).send("User not found!");
+        return res.status(400).send("User not found!");
       }
       result
         .authenticate(req.body.password)
         .then(user => {
           const payload = { id: user.id };
-          const token = jwt.sign(payload, process.env.SECRET_OR_KEY);
+          const token = jwt.sign(payload, process.env.SECRET_OR_KEY); // uses bcrypt to hash the token
           res.send(token);
         })
         .catch(err => {
-          return res.result(401).send("error with retrieving tokenization");
+          return res.status(401).send("error with retrieving tokenization");
         });
     });
 });
@@ -63,5 +74,7 @@ router.get(
     res.send(req.user);
   }
 );
+
+
 
 module.exports = router;

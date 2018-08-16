@@ -21,6 +21,11 @@ app.use(passport.initialize());
 
 // handles all authentication and authorization routes
 app.use("/auth", auth);
+// handles all routes pertaining to user information
+app.use("/profile", require("./routes/profile"));
+// hnadles all routes pertaining to food storage
+
+// handles all routes pertaining to user nutrtition
 
 // USER Authentication and Registration route
 require("./routes/authroutes")(app);

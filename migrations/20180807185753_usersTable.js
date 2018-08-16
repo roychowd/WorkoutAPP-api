@@ -6,10 +6,7 @@ exports.up = function(knex, Promise) {
       .primary();
     table.string("email").notNull();
     table.string("password_digest").notNull();
-    // table
-    //   .timestamp("joined_at")
-    //   .defaultTo(knex.fn.now())
-    //   .notNull();
+
   });
 };
 

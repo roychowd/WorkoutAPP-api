@@ -33,7 +33,6 @@ router.post("/seedUser", (req, res) => {
 
 // == this is a test route to get the json web token of the user == //
 router.post("/getToken", (req, res) => {
-  console.log(req.body);
   if (!req.body.email || !req.body.password) {
     return res.status(401).send("Error: INVALID credientals");
   }
@@ -41,15 +40,19 @@ router.post("/getToken", (req, res) => {
   User.forge({ email: req.body.email })
     .fetch()
     .then(result => {
-      console.log(result);
       if (!result) {
         return res.status(400).send("User not found!");
       }
       result
         .authenticate(req.body.password)
         .then(user => {
-          const payload = { id: user.id };
+          console.log(user);
+          const payload = {
+            id: user.id,
+            calories: user.attributes.daily_Calories
+          };
           const token = jwt.sign(payload, process.env.SECRET_OR_KEY); // uses bcrypt to hash the token
+          user.save({ updated_at: new Date() });
           res.send(token);
         })
         .catch(err => {

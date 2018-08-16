@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const User = require("../config/db/userModel");
 
-
 router.get("/", (req, res) => {
   res.send("hi");
 });
@@ -23,4 +22,7 @@ router.put("/:id/dailyCal", (req, res) => {
     .catch(err => res.status(500).json({ error: true, data: err }));
 });
 
+function checkIfNumber(calories) {
+  
+}
 module.exports = router;

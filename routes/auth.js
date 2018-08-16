@@ -22,7 +22,7 @@ router.post("/seedUser", (req, res) => {
           password: req.body.password
         });
         user.save().then(user => {
-          res.send(user);
+          res.send({ id: user.id });
         });
       } else {
         return res.status(401).send("ERROR");
@@ -74,7 +74,5 @@ router.get(
     res.send(req.user);
   }
 );
-
-
 
 module.exports = router;

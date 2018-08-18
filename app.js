@@ -28,8 +28,8 @@ app.use("/profile", require("./routes/profile"));
 // handles all routes pertaining to user nutrtition
 
 // USER Authentication and Registration route
-require("./routes/authroutes")(app);
-require("./routes/userFood")(app);
+// require("./routes/authroutes")(app);
+// require("./routes/userFood")(app);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

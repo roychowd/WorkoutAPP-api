@@ -9,8 +9,8 @@ router.get("/", (req, res) => {
 });
 
 router.post("/seedUser", (req, res) => {
-  console.log(req.body);
-  if (!req.body.email || !req.body.password) {
+  console.log('This is the body:',req.body);
+  if (!req.body.email || !req.body.password || !req.body.firstName || !req.body.lastName) {
     return res.status(401).send("Error: INVALID credientals");
   }
   User.forge({ email: req.body.email })
@@ -19,7 +19,9 @@ router.post("/seedUser", (req, res) => {
       if (!result) {
         const user = new User({
           email: req.body.email,
-          password: req.body.password
+          password: req.body.password,
+          firstName: req.body.firstName,
+          lastName:req.body.lastName
         });
         user.save().then(user => {
           res.send({ id: user.id });

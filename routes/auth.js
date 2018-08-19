@@ -9,8 +9,13 @@ router.get("/", (req, res) => {
 });
 
 router.post("/seedUser", (req, res) => {
-  console.log('This is the body:',req.body);
-  if (!req.body.email || !req.body.password || !req.body.firstName || !req.body.lastName) {
+  console.log("This is the body:", req.body);
+  if (
+    !req.body.email ||
+    !req.body.password ||
+    !req.body.firstName ||
+    !req.body.lastName
+  ) {
     return res.status(401).send("Error: INVALID credientals");
   }
   User.forge({ email: req.body.email })
@@ -21,7 +26,7 @@ router.post("/seedUser", (req, res) => {
           email: req.body.email,
           password: req.body.password,
           firstName: req.body.firstName,
-          lastName:req.body.lastName
+          lastName: req.body.lastName
         });
         user.save().then(user => {
           res.send({ id: user.id });
@@ -51,7 +56,9 @@ router.post("/getToken", (req, res) => {
           console.log(user);
           const payload = {
             id: user.id,
-            calories: user.attributes.daily_Calories
+            calories: user.attributes.daily_Calories,
+            firstName: user.attributes.firstName,
+            lastName: user.attributes.lastName
           };
           const token = jwt.sign(payload, process.env.SECRET_OR_KEY); // uses bcrypt to hash the token
           user.save({ updated_at: new Date() });

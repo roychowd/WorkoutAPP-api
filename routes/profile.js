@@ -22,7 +22,7 @@ router.put("/:id/dailyCal", (req, res) => {
     .catch(err => res.status(500).json({ error: true, data: err }));
 });
 
-function checkIfNumber(calories) {
+// function checkIfNumber(calories) {
   
-}
+// }
 module.exports = router;

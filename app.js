@@ -27,6 +27,8 @@ app.use("/profile", require("./routes/profile"));
 
 // handles all routes pertaining to user nutrtition
 
+//handles all routes pertaining to user exercises
+app.use("/exercise", require("./routes/exerciseRoutes"));
 // USER Authentication and Registration route
 // require("./routes/authroutes")(app);
 // require("./routes/userFood")(app);

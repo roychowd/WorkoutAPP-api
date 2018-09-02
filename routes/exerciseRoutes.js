@@ -6,6 +6,8 @@ router.get("/", (req, res) => {
   res.send("hi");
 });
 
+
+// in this route we are using bookshelf js to retrieve all data for the required musclc 
 router.get("/category/:muscle", (req, res) => {
   // console.log(req.params.muscle);
   if (req.params.muscle === "upperArm") {
@@ -15,6 +17,11 @@ router.get("/category/:muscle", (req, res) => {
   }
   console.log(muscle);
   //   exercises.forge({ muscle: req.params.muscle }).fetchAll();
+  exercises
+    .where("categoryMuscle", `${muscle}`)
+    .fetchAll()
+    .then(result =>
+      res.send(result));
 });
 
 module.exports = router;
